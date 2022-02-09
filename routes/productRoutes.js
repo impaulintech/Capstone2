@@ -3,9 +3,13 @@ const router = require('express').Router();
 const auth = require('../auth')
 const productController = require('../controllers/productControllers');
 
+//root folder
+router.get('/', (req, res) => {
+    res.send("I'm Alive!")
+})
+
 //Add Products (Admin Only)
 router.post('/', auth.verify, (req, res) => {
-
     let userData = auth.decode(req.headers.authorization)
 
     productController.addProduct(userData, req.body)
@@ -15,25 +19,23 @@ router.post('/', auth.verify, (req, res) => {
 
 })
 
-// Get All Products
+//Get All Products
 router.get("/all", (req, res) => {
     productController.getAll()
-        .then(result => res.send(result));
+        .then(result => {
+            res.send(result)
+        });
 })
 
-// Get All Active Products
+//Get All Active Products
 router.get("/active", (req, res) => {
-
     productController.getAllActive()
         .then(result => {
             res.send(result)
         })
-
-    // productController.getAllActive()
-    //     .then(result => res.send(result));
 })
 
-// Get Specific Product
+//Get Specific Product
 router.get("/:productId", (req, res) => {
     productController.getProduct(req.params.productId)
         .then(result => {
@@ -43,12 +45,11 @@ router.get("/:productId", (req, res) => {
 
 //Update Product
 router.put("/:productId", auth.verify, (req, res) => {
-
     let userData = auth.decode(req.headers.authorization)
 
     productController.updateProduct(userData, req.params.productId, req.body)
         .then(result => {
-            res.send(result)
+            res.send({ message: "Product has been updated" })
         })
 })
 

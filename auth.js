@@ -1,6 +1,6 @@
 //Import modules
 const jwt = require('jsonwebtoken');
-const secret = "AbdulTikul";
+const secret = "qqiuqielcoqwmdfudgzivfkkloywganf";
 
 module.exports = {
     createAccessToken: (user) => {

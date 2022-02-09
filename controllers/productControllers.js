@@ -1,6 +1,4 @@
-//Import Model 
-const auth = require('../auth');
-const bcrypt = require('bcrypt');
+//Import Model  
 const Product = require('../models/Product');
 
 module.exports = {

@@ -1,13 +1,12 @@
 //Import module
 const express = require('express');
 const userController = require('../controllers/userControllers');
+const auth = require('../auth');
 const router = express.Router();
 
 //root folder
 router.get('/', (req, res) => {
-    res.send({
-        message: "root folder"
-    })
+    res.send("I'm Alive!")
 })
 
 //Register
@@ -21,7 +20,44 @@ router.post('/register', (req, res) => {
 //Login
 router.post('/login', (req, res) => {
     userController.login(req.body)
-        .then(result => { res.send(result) })
+        .then(result => {
+            res.send(result)
+        })
 })
+
+//Checkout
+router.post("/checkout", auth.verify, (req, res) => {
+    let userData = auth.decode(req.headers.authorization)
+
+    userController.checkout(userData, req.body)
+        .then(result => {
+            res.send({
+                message: "Order checkout successfully",
+                orderDetails: req.body
+            })
+        });
+})
+
+//Get my orders
+router.get("/my-orders", auth.verify, (req, res) => {
+    let userData = auth.decode(req.headers.authorization)
+
+    userController.getMyOrders(userData)
+        .then(result => {
+            res.send(result)
+        });
+})
+
+//View all the orders
+router.get("/orders", auth.verify, (req, res) => {
+    let userData = auth.decode(req.headers.authorization)
+
+    userController.getAllOrders(userData)
+        .then(result => {
+            res.send(result)
+        });
+
+})
+
 
 module.exports = router;
