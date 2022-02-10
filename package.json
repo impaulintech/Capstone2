@@ -1,8 +1,8 @@
 {
   "name": "csp-2",
   "version": "1.0.0",
-  "description": "",
-  "main": "app.js",
+  "description": "csp-2",
+  "main": "index.js",
   "scripts": {
     "start": "node app.js"
   },
