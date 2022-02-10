@@ -5,11 +5,14 @@ const productController = require('../controllers/productControllers');
 
 //root folder
 router.get('/', (req, res) => {
-    res.send("I'm Alive!")
+    res.send({
+        message: "root folder"
+    })
 })
 
 //Add Products (Admin Only)
-router.post('/', auth.verify, (req, res) => {
+router.post('/add-product', auth.verify, (req, res) => {
+
     let userData = auth.decode(req.headers.authorization)
 
     productController.addProduct(userData, req.body)
@@ -19,23 +22,25 @@ router.post('/', auth.verify, (req, res) => {
 
 })
 
-//Get All Products
+// Get All Products
 router.get("/all", (req, res) => {
     productController.getAll()
-        .then(result => {
-            res.send(result)
-        });
+        .then(result => res.send(result));
 })
 
-//Get All Active Products
+// Get All Active Products
 router.get("/active", (req, res) => {
+
     productController.getAllActive()
         .then(result => {
             res.send(result)
         })
+
+    // productController.getAllActive()
+    //     .then(result => res.send(result));
 })
 
-//Get Specific Product
+// Get Specific Product
 router.get("/:productId", (req, res) => {
     productController.getProduct(req.params.productId)
         .then(result => {
@@ -49,7 +54,7 @@ router.put("/:productId", auth.verify, (req, res) => {
 
     productController.updateProduct(userData, req.params.productId, req.body)
         .then(result => {
-            res.send({ message: "Product has been updated" })
+            res.send(result)
         })
 })
 
@@ -59,7 +64,7 @@ router.put("/:productId/archive", auth.verify, (req, res) => {
 
     productController.archiveProduct(userData, req.params.productId)
         .then(result => {
-            res.send({ message: "Product has been Archive" })
+            res.send(result)
         })
 })
 
@@ -69,7 +74,7 @@ router.put("/:productId/activate", auth.verify, (req, res) => {
 
     productController.activateProduct(userData, req.params.productId)
         .then(result => {
-            res.send({ message: "Product has been Activated" })
+            res.send(result)
         })
 })
 

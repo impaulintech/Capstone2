@@ -26,7 +26,7 @@ const productSchema = new mongoose.Schema({
         {
             orderId: {
                 type: String,
-                default: Math.floor(Math.random() * 999999) + 000003
+                required: [true, "Order ID is required"]
             }
         }
     ]

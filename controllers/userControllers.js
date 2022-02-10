@@ -1,6 +1,8 @@
 //Import Model 
 const auth = require('../auth');
 const User = require('../models/User');
+const Product = require('../models/Product')
+const bcrypt = require('bcrypt')
 
 module.exports = {
     register: (reqbody) => {
@@ -8,7 +10,7 @@ module.exports = {
 
         const newUser = new User({
             email,
-            password
+            password: bcrypt.hashSync(password, 9)
         })
 
         return newUser.save().then((res, rej) => {
@@ -26,14 +28,13 @@ module.exports = {
     },
     login: (reqBody) => {
         const { email, password } = reqBody
-
         return User.findOne({ email })
-            .then((res, rej) => {
+            .then((res) => {
                 if (res == null) {
                     return { message: "Cannot find email in the database" }
                 } else {
-
-                    if (password === res.password) {
+                    const inputPass = bcrypt.compareSync(password, res.password)
+                    if (inputPass == true) {
                         return {
                             access: auth.createAccessToken(res)
                         }
@@ -43,43 +44,56 @@ module.exports = {
                 }
             })
     },
-    checkout: async (userData, reqBody) => {
-        const { id, isAdmin } = userData;
+    checkout: async (userData, cart) => {
+        //verification
+        if (userData.isAdmin == false) {
 
-        if (isAdmin == false) {
-            return User.findByIdAndUpdate(id, {
-                $addToSet: {
-                    orders: reqBody
-                }
-            }, { new: true })
-        } return { message: "Admin is not allowed to checkout" }
+            //save newOrder from user to database
+            const newOrder = await User.findByIdAndUpdate(userData.id, { $addToSet: { orders: cart } }, { new: true })
+
+            //get latest order from user
+            const latestOrder = newOrder.orders[newOrder.orders.length - 1]
+            const orderId = latestOrder._id
+
+            let productId
+            let productDetail
+            for (let i = 0; i < cart.products.length; i++) {
+                //find Product using product ID from cart.products[0].productId
+                productId = cart.products[i].productId
+                //save latest order id from user to Product.orders Array
+                productDetail = await Product.findByIdAndUpdate(productId,
+                    { $addToSet: { orders: [{ orderId }] } }, { new: true })
+            }
+
+            return {
+                "productDetails": productDetail,
+                "latestOrder": latestOrder
+            }
+        } return "Admin is not allowed to checkout"
     },
     getMyOrders: async (userData) => {
-        const { id, isAdmin } = await userData;
-        const userOrder = await User.findById(id);
+        if (userData.isAdmin == false) {
 
-        if (isAdmin == false) {
-            return userOrder.orders
-        } return { message: "Admin is not allowed to check user orders" }
+            const myOrders = await User.findById(userData.id)
+
+            return myOrders.orders
+
+        } return { message: "Admin is not allowed to get my orders" }
     },
     getAllOrders: async (userData) => {
-        const { id, isAdmin } = userData;
-        const orderList = await User.find();
+        if (userData.isAdmin == true) {
 
-        const getOrders = [];
+            const allOrders = await User.find().select("-password -isAdmin -__v")
+            let allActiveOrders = []
 
-        if (isAdmin == true) {
-
-            orderList.forEach((list) => {
-                if (list.orders.length >= 1) {
-                    getOrders.push({
-                        "userId": list._id,
-                        "email": list.email,
-                        "orders": list.orders
-                    });
+            for (let i = 0; i < allOrders.length; i++) {
+                if (allOrders[i].orders.length >= 1) {
+                    allActiveOrders.push(allOrders[i].orders)
                 }
-            })
-            return getOrders
-        } return { message: "User is not allowed to view orders" }
+            }
+
+            return allActiveOrders
+
+        } return { message: "User is not allowed to get all orders" }
     }
 }

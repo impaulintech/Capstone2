@@ -1,12 +1,14 @@
 //Import module
 const express = require('express');
 const userController = require('../controllers/userControllers');
-const auth = require('../auth');
+const auth = require('../auth')
 const router = express.Router();
 
 //root folder
 router.get('/', (req, res) => {
-    res.send("I'm Alive!")
+    res.send({
+        message: "root folder"
+    })
 })
 
 //Register
@@ -20,9 +22,7 @@ router.post('/register', (req, res) => {
 //Login
 router.post('/login', (req, res) => {
     userController.login(req.body)
-        .then(result => {
-            res.send(result)
-        })
+        .then(result => { res.send(result) })
 })
 
 //Checkout
@@ -31,15 +31,13 @@ router.post("/checkout", auth.verify, (req, res) => {
 
     userController.checkout(userData, req.body)
         .then(result => {
-            res.send({
-                message: "Order checkout successfully",
-                orderDetails: req.body
-            })
+            res.send(result.latestOrder)
         });
 })
 
-//Get my orders
+//My-orders
 router.get("/my-orders", auth.verify, (req, res) => {
+
     let userData = auth.decode(req.headers.authorization)
 
     userController.getMyOrders(userData)
@@ -48,8 +46,9 @@ router.get("/my-orders", auth.verify, (req, res) => {
         });
 })
 
-//View all the orders
+//View all the orders Admin Only
 router.get("/orders", auth.verify, (req, res) => {
+
     let userData = auth.decode(req.headers.authorization)
 
     userController.getAllOrders(userData)
@@ -58,6 +57,5 @@ router.get("/orders", auth.verify, (req, res) => {
         });
 
 })
-
 
 module.exports = router;
