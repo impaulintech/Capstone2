@@ -25,19 +25,17 @@ router.post('/add-product', auth.verify, (req, res) => {
 // Get All Products
 router.get("/all", (req, res) => {
     productController.getAll()
-        .then(result => res.send(result));
+        .then(result => {
+            res.send(result)
+        });
 })
 
 // Get All Active Products
 router.get("/active", (req, res) => {
-
     productController.getAllActive()
         .then(result => {
             res.send(result)
         })
-
-    // productController.getAllActive()
-    //     .then(result => res.send(result));
 })
 
 // Get Specific Product
