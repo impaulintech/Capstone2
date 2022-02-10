@@ -31,11 +31,4 @@ db.on('error', console.error.bind(console, `Error Connecting to Database.`));
 db.once('open', () => { console.log(`Connected to Database!`) })
 
 //Server status
-if (process.env.NODE_ENV === 'production') {
-    //set static folder
-    app.use(express.static('client/build'));
-}
-app.get('*', (req, res) => {
-    res.sendFile(path.resolve(__dirname, 'client', 'build', 'index.html'));
-});
 app.listen(port, () => { console.log(`Server is running at PORT:${port}`) })

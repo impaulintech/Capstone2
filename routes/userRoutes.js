@@ -1,8 +1,8 @@
 //Import module
 const express = require('express');
-const userController = require('../controllers/userControllers');
-const auth = require('../auth')
 const router = express.Router();
+const auth = require('../auth')
+const userController = require('../controllers/userControllers');
 
 //root folder
 router.get('/', (req, res) => {

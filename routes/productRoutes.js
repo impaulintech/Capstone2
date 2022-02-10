@@ -1,5 +1,6 @@
 //Import module
-const router = require('express').Router();
+const express = require('express');
+const router = express.Router();
 const auth = require('../auth')
 const productController = require('../controllers/productControllers');
 
