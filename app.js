@@ -5,7 +5,7 @@ const mongoose = require('mongoose');
 const cors = require('cors');
 
 //Server & Database connection
-const PORT = process.env.PORT || 5000;
+const port = process.env.PORT || 5000;
 const DATABASE_URL = "mongodb+srv://admin:admin@csp2.tpt6x.mongodb.net/database?retryWrites=true&w=majority";
 
 //Middlewares
@@ -31,4 +31,4 @@ db.on('error', console.error.bind(console, `Error Connecting to Database.`));
 db.once('open', () => { console.log(`Connected to Database!`) })
 
 //Server status
-app.listen(PORT, () => { console.log(`Server is running at PORT:${PORT}`) })
+app.listen(port, () => { console.log(`Server is running at PORT:${port}`) })
