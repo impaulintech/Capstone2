@@ -14,7 +14,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use(cors());
 
 //Temporary Index Page
-app.use("/", require('./routes/index'));
+// app.use("/", require('./routes/index'));
 
 //userRoutes module
 app.use("/users", require('./routes/userRoutes'));
