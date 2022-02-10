@@ -24,9 +24,9 @@ module.exports = {
             let slicedToken = token.slice(7, token.length)
             return jwt.verify(slicedToken, secret, (err, data) => {
                 if (err) {
-                    res.send({ auth: "failed authentication" })
+                    return res.send({ auth: "failed authentication" })
                 } next();
             })
-        } res.send({ message: "undefined token" })
+        } return res.send({ message: "undefined token" })
     }
 }
