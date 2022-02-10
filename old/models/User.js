@@ -17,24 +17,17 @@ const userSchema = new mongoose.Schema({
     },
     orders: [
         {
-            totalAmount: {
-                type: Number,
-                required: [
-                    true,
-                    "Total amount is required"
-                ]
-            },
             purchasedOn: {
                 type: Date,
                 default: new Date()
             },
             products: [
                 {
-                    productName: {
+                    productId: {
                         type: String,
                         required: [
                             true,
-                            "Product name is required"
+                            "Product ID is required"
                         ]
                     },
                     quantity: {
@@ -45,7 +38,14 @@ const userSchema = new mongoose.Schema({
                         ]
                     }
                 }
-            ]
+            ],
+            totalAmount: {
+                type: Number,
+                required: [
+                    true,
+                    "Total amount is required"
+                ]
+            }
         }
     ]
 })

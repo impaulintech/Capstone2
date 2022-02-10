@@ -48,7 +48,9 @@ module.exports = {
 
         if (isAdmin == false) {
             return User.findByIdAndUpdate(id, {
-                orders: reqBody
+                $addToSet: {
+                    orders: reqBody
+                }
             }, { new: true })
         } return { message: "Admin is not allowed to checkout" }
     },

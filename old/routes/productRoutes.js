@@ -3,8 +3,15 @@ const router = require('express').Router();
 const auth = require('../auth')
 const productController = require('../controllers/productControllers');
 
+//root folder
+router.get('/', (req, res) => {
+    res.send({
+        message: "root folder"
+    })
+})
+
 //Add Products (Admin Only)
-router.post('/', auth.verify, (req, res) => {
+router.post('/add-product', auth.verify, (req, res) => {
 
     let userData = auth.decode(req.headers.authorization)
 
@@ -43,7 +50,6 @@ router.get("/:productId", (req, res) => {
 
 //Update Product
 router.put("/:productId", auth.verify, (req, res) => {
-
     let userData = auth.decode(req.headers.authorization)
 
     productController.updateProduct(userData, req.params.productId, req.body)
@@ -58,7 +64,7 @@ router.put("/:productId/archive", auth.verify, (req, res) => {
 
     productController.archiveProduct(userData, req.params.productId)
         .then(result => {
-            res.send({ message: "Product has been Archive" })
+            res.send(result)
         })
 })
 
@@ -68,7 +74,7 @@ router.put("/:productId/activate", auth.verify, (req, res) => {
 
     productController.activateProduct(userData, req.params.productId)
         .then(result => {
-            res.send({ message: "Product has been Activated" })
+            res.send(result)
         })
 })
 

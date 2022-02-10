@@ -13,10 +13,10 @@ app.use(express.urlencoded({ extended: true }));
 app.use(cors());
 
 //userRoutes module
-app.use("/api/users", require('./routes/userRoutes'));
+app.use("/users", require('./routes/userRoutes'));
 
 //productRoutes module
-app.use("/api/products", require('./routes/productRoutes'))
+app.use("/products", require('./routes/productRoutes'))
 
 //Connection to database
 mongoose.connect(DATABASE_URL, { useNewUrlParser: true, useUnifiedTopology: true })

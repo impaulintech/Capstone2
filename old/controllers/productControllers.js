@@ -1,6 +1,4 @@
-//Import Model 
-const auth = require('../auth');
-const bcrypt = require('bcrypt');
+//Import Model  
 const Product = require('../models/Product');
 
 module.exports = {
@@ -56,19 +54,25 @@ module.exports = {
                 } return { message: "Something went wrong" }
             })
     },
-    getProduct: (id) => {
-        return Product.findById(id)
+    getProduct: async (id) => {
+        const search = await Product.findById(id)
+        if (search == null) {
+            return { message: "Something went wrong" }
+        } return Product.findById(id)
     },
     updateProduct: async (userData, id, reqBody) => {
         const { name, description, price } = await reqBody;
-
+        const search = await Product.findById(id)
+        if (search == null) {
+            return { message: "Something went wrong" }
+        }
         if (userData.isAdmin == true) {
 
             const product = await Product.findByIdAndUpdate(id, {
                 name,
                 description,
                 price
-            })
+            }, { new: true })
 
             return product
 
@@ -77,19 +81,31 @@ module.exports = {
 
     },
     archiveProduct: async (userData, id) => {
+        const search = await Product.findById(id)
+        if (search == null) {
+            return { message: "Something went wrong" }
+        }
         if (userData.isAdmin == true) {
 
             return Product.findByIdAndUpdate(id, {
                 isActive: false
+            }).then(res => {
+                return { message: "Product has been Archive" }
             })
 
         } return { message: "User is not allowed to update product" }
     },
     activateProduct: async (userData, id) => {
+        const search = await Product.findById(id)
+        if (search == null) {
+            return { message: "Something went wrong" }
+        }
         if (userData.isAdmin == true) {
 
-            return Product.findByIdAndUpdate(id, {
+            return await Product.findByIdAndUpdate(id, {
                 isActive: true
+            }).then(res => {
+                return { message: "Product has been Activated" }
             })
 
         } return { message: "User is not allowed to update product" }
