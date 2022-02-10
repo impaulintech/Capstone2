@@ -5,7 +5,7 @@ const mongoose = require('mongoose');
 const cors = require('cors');
 
 //Server & Database connection
-const port = process.env.PORT || 5000;
+let port = process.env.PORT || 5000;
 const DATABASE_URL = "mongodb+srv://admin:admin@csp2.tpt6x.mongodb.net/database?retryWrites=true&w=majority";
 
 //Middlewares
