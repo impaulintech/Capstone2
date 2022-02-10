@@ -5,7 +5,7 @@ const mongoose = require('mongoose');
 const cors = require('cors');
 
 //Server & Database connection
-let port = 5000;
+let port = process.env.PORT || 5000;
 const DATABASE_URL = "mongodb+srv://admin:admin@csp2.tpt6x.mongodb.net/database?retryWrites=true&w=majority";
 
 //Middlewares
@@ -28,4 +28,4 @@ app.use("/users", require('./routes/userRoutes'));
 app.use("/products", require('./routes/productRoutes'))
 
 //Server status
-app.listen(process.env.PORT || port, () => { console.log(`Server is running at PORT:${port}`) })
+app.listen(port, () => { console.log(`Server is running at PORT:${port}`) })
